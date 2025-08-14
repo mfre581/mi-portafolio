@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#0f4c81",
+              secondary: "#facc15",
+            },
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body class="bg-white text-gray-800 font-sans">
+    <div class="min-h-screen flex flex-col lg:flex-row">
+      <!-- Columna izquierda -->
+      <div
+        class="flex-1 flex flex-col justify-center items-start p-10 lg:p-20 border-b lg:border-b-0 lg:border-r border-gray-200">
+        <h1 class="text-5xl lg:text-6xl font-bold mb-4">Michel Freymann</h1>
+
+        <p class="text-lg text-gray-600 mb-4 max-w-sm">
+          Desarrollador web enfocado en crear experiencias digitales limpias,
+          rápidas y funcionales.
+        </p>
+
+        <!-- Botón para mostrar/ocultar texto adicional -->
+        <button
+          id="toggleSobreMi"
+          class="mb-6 text-primary font-semibold hover:underline focus:outline-none"
+          aria-expanded="false"
+          aria-controls="sobreMiContenido">
+          Sobre mí y este portfolio
+          <span
+            id="iconoFlecha"
+            class="inline-block ml-2 transition-transform duration-300"
+            >&#9660;</span
+          >
+        </button>
+
+        <!-- Contenido desplegable -->
+        <div
+          id="sobreMiContenido"
+          class="max-w-sm text-gray-600 hidden"
+          aria-hidden="true">
+          <p>
+            En este portfolio encontrarás algunos de los proyectos que he
+            desarrollado durante mi formación, donde aplico lenguajes como
+            JavaScript, TypeScript, Java, PHP, HTML, CSS y frameworks como React
+            y Angular. Mi objetivo es construir soluciones que sean tanto
+            eficientes como fáciles de usar, combinando buenas prácticas de
+            desarrollo con atención al detalle.
+          </p>
+        </div>
+
+        <!-- Redes sociales con iconos a color -->
+        <div class="flex space-x-4 mt-6 ml-10">
+          <!-- Instagram -->
+          <a
+            href="https://www.instagram.com/michel_freymann"
+            target="_blank"
+            title="Instagram"
+            rel="noopener noreferrer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              class="w-8 h-8">
+              <radialGradient
+                id="IGgrad"
+                cx="19.38"
+                cy="42.035"
+                r="44.77"
+                gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#fd5" />
+                <stop offset=".5" stop-color="#ff543e" />
+                <stop offset="1" stop-color="#c837ab" />
+              </radialGradient>
+              <path
+                fill="url(#IGgrad)"
+                d="M34 4H14C8.5 4 4 8.5 4 14v20c0 5.5 4.5 10 10 10h20c5.5 0 10-4.5 10-10V14c0-5.5-4.5-10-10-10z" />
+              <path
+                fill="#fff"
+                d="M24 15.5A8.5 8.5 0 1 0 32.5 24 8.51 8.51 0 0 0 24 15.5zm0 14A5.5 5.5 0 1 1 29.5 24 5.51 5.51 0 0 1 24 29.5zM33.5 14a2 2 0 1 1-2-2 2 2 0 0 1 2 2z" />
+            </svg>
+          </a>
+
+          <!-- Gmail -->
+          <a
+            href="mailto:michelfreymann@gmail.com"
+            title="Gmail"
+            rel="noopener noreferrer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              class="w-8 h-8">
+              <path
+                fill="#f44336"
+                d="M45.5 12.5V36c0 1.93-1.57 3.5-3.5 3.5H6c-1.93 0-3.5-1.57-3.5-3.5V12.5l21 15.75L45.5 12.5z" />
+              <path
+                fill="#f44336"
+                d="M45.5 12.5l-21 15.75-21-15.75V12c0-1.93 1.57-3.5 3.5-3.5h35c1.93 0 3.5 1.57 3.5 3.5v.5z" />
+              <path fill="#fff" d="M3.5 12.5L24 28.25 44.5 12.5H3.5z" />
+            </svg>
+          </a>
+
+          <!-- WhatsApp -->
+          <a
+            href="https://wa.me/34635325562"
+            target="_blank"
+            title="WhatsApp"
+            rel="noopener noreferrer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              class="w-8 h-8">
+              <path
+                fill="#4CAF50"
+                d="M4.9 43.1l2.6-9.6a19 19 0 1 1 7 7l-9.6 2.6z" />
+              <path
+                fill="#fff"
+                d="M34.6 27.8c-.6-.3-3.3-1.6-3.8-1.8-.5-.2-.8-.3-1.2.3s-1.4 1.8-1.7 2.1c-.3.3-.6.4-1.1.1-1.5-.7-2.8-1.5-3.9-2.7-1.1-1.1-2-2.4-2.7-3.9-.3-.5-.2-.8.1-1.1.3-.3.6-.7.9-1 .3-.3.4-.5.6-.9.2-.4.1-.7 0-1-.1-.3-1.2-2.9-1.6-4-.4-1-0.8-.9-1.2-1-0.3 0-.7 0-1.1 0-.4 0-1 .1-1.5.7s-2 1.9-2 4.7 2 5.4 2.3 5.7c.3.4 3.9 6.1 9.4 8.4 1.3.6 2.3 1 3.1 1.3 1.3.4 2.5.3 3.4.2 1-.1 3.3-1.3 3.8-2.5.5-1.2.5-2.2.3-2.5-.2-.3-.6-.5-1.2-.8z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Columna derecha -->
+      <div
+        class="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-6 p-10 lg:p-20"
+        id="proyectos">
+        <!-- Proyectos generados por JS -->
+      </div>
+    </div>
+
+    <script>
+      // Toggle para mostrar/ocultar el contenido "Sobre mí"
+      const btnToggle = document.getElementById("toggleSobreMi");
+      const contenido = document.getElementById("sobreMiContenido");
+      const iconoFlecha = document.getElementById("iconoFlecha");
+
+      btnToggle.addEventListener("click", () => {
+        const isHidden = contenido.classList.contains("hidden");
+        if (isHidden) {
+          contenido.classList.remove("hidden");
+          btnToggle.setAttribute("aria-expanded", "true");
+          contenido.setAttribute("aria-hidden", "false");
+          iconoFlecha.style.transform = "rotate(180deg)";
+        } else {
+          contenido.classList.add("hidden");
+          btnToggle.setAttribute("aria-expanded", "false");
+          contenido.setAttribute("aria-hidden", "true");
+          iconoFlecha.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Código original para proyectos
+      const proyectos = [
+        {
+          titulo: "Juego de cartas",
+          icono: "♠️",
+          link: "./cartas/juego.html",
+          tecnologias: "JavaScript, HTML, CSS",
+        },
+        {
+          titulo: "Agenda",
+          icono: "📒",
+          link: "./agenda/index.html",
+          tecnologias: "Angular, TypeScript y Local Storage",
+        },
+        {
+          titulo: "Tienda de guitarras",
+          icono: "🎸",
+          link: "./guitarras/index.html",
+          tecnologias: "React, TypeScript, Vite, Local Storage",
+        },
+        {
+          titulo: "Adivina el Pokemon",
+          icono: `<svg viewBox="0 0 64 64" width="24" height="24" aria-label="Poké Ball">
+          <path fill="#e53935" d="M32 6c13.255 0 24 10.745 24 24H8C8 16.745 18.745 6 32 6z"/>
+          <path fill="#fff" d="M56 32c0 13.255-10.745 24-24 24S8 45.255 8 32h48z"/>
+          <rect fill="#1f2937" x="6" y="29" width="52" height="6" rx="3"/>
+          <circle fill="#1f2937" cx="32" cy="32" r="10"/>
+          <circle fill="#e5e7eb" cx="32" cy="32" r="6"/>
+          <circle cx="32" cy="32" r="30" fill="none" stroke="#1f2937" stroke-width="4"/>
+          </svg>`,
+          link: "./pokemon/pokemon.html",
+          tecnologias: "JavaScript, HTML, CSS Y API REST",
+        },
+        {
+          titulo: "Concurso de Fotografía",
+          icono: "📸",
+          link: "http://retalesurbanos.byethost7.com",
+          tecnologias: "PHP, HTML, Bootstrap y MySQL",
+        },
+        {
+          titulo: "Restaurante",
+          icono: "🍽️",
+          link: "./restaurante/index.html",
+          tecnologias: "React, TypeScript y Tailwind",
+        },
+      ];
+
+      const contenedor = document.getElementById("proyectos");
+
+      proyectos.forEach((p) => {
+        contenedor.innerHTML += `
+    <a href="${p.link}" target="_blank" class="group bg-gray-100 rounded-xl flex flex-col items-center justify-center p-6 hover:bg-primary hover:text-white transition text-center shadow-md hover:shadow-xl">
+      <div class="text-5xl mb-2">${p.icono}</div>
+      <span class="text-sm font-semibold">${p.titulo}</span>
+      <span class="text-xs text-gray-500 mt-1 group-hover:text-white transition">${p.tecnologias}</span>
+    </a>
+      `;
+      });
+    </script>
+  </body>
+</html>
