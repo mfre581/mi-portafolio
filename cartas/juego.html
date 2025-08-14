@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mayor o Menor</title>
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+  <body>
+    <div class="contenedor" id="contenedor-juego">
+      <h1>Mayor o Menor</h1>
+
+      <button id="btn-instrucciones" onclick="toggleInstrucciones()">
+        Mostrar instrucciones
+      </button>
+
+      <div id="instrucciones" class="instrucciones">
+        <p>
+          Se van a mostrar las 52 cartas de la baraja, adivina si la siguiente
+          carta es mayor o menor que la actual intentando conseguir la mejor
+          puntuación ¡Buena suerte!
+        </p>
+      </div>
+
+      <div id="mensaje-jugada" class="mensaje-jugada"></div>
+
+      <div id="puntuacion">
+        <strong>Puntuación: </strong><span id="score">0</span>
+      </div>
+      <div id="cartas-restantes">
+        Cartas restantes: <span id="contador-cartas">52</span>
+      </div>
+      <div id="carta-actual">
+        <img
+          id="cardImage"
+          src="https://deckofcardsapi.com/static/img/back.png"
+          alt="Carta actual" />
+      </div>
+
+      <div id="jugadas">
+        <button id="btn-mayor">Mayor</button>
+        <button id="btn-menor">Menor</button>
+      </div>
+
+      <div id="acciones">
+        <button id="iniciar">Iniciar Juego</button>
+        <button id="terminar">Terminar Juego</button>
+        <button id="recomenzar">Reiniciar Juego</button>
+      </div>
+
+      <div id="mensaje" tabindex="-1">
+        <h2>¡Juego Terminado!</h2>
+        <button id="btn-ver-estadisticas">Ver Estadísticas</button>
+      </div>
+
+      <div id="estadisticas">
+        <h3>Estadísticas del Juego</h3>
+        <canvas id="grafico"></canvas>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
