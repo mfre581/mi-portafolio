@@ -2,18 +2,23 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+     <!-- Hace que la página se adapte bien a móviles y pantallas pequeñas -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mayor o Menor</title>
+    <!-- Enlazamos el archivo CSS externo con los estilos -->
     <link rel="stylesheet" href="estilo.css" />
   </head>
   <body>
+    <!-- Contenedor principal del juego -->
     <div class="contenedor" id="contenedor-juego">
       <h1>Mayor o Menor</h1>
 
+      <!-- Botón para mostrar u ocultar las instrucciones -->
       <button id="btn-instrucciones" onclick="toggleInstrucciones()">
         Mostrar instrucciones
       </button>
 
+      <!-- Texto con las instrucciones del juego -->
       <div id="instrucciones" class="instrucciones">
         <p>
           Se van a mostrar las 52 cartas de la baraja, adivina si la siguiente
@@ -22,14 +27,20 @@
         </p>
       </div>
 
+      <!-- Mensaje que aparece después de cada jugada -->
       <div id="mensaje-jugada" class="mensaje-jugada"></div>
 
+      <!-- Puntuación actual -->
       <div id="puntuacion">
         <strong>Puntuación: </strong><span id="score">0</span>
       </div>
+
+      <!-- Número de cartas restantes -->
       <div id="cartas-restantes">
         Cartas restantes: <span id="contador-cartas">52</span>
       </div>
+
+      <!-- Imagen de la carta actual -->
       <div id="carta-actual">
         <img
           id="cardImage"
@@ -37,28 +48,36 @@
           alt="Carta actual" />
       </div>
 
+       <!-- Botones para elegir si la siguiente carta será mayor o menor -->
       <div id="jugadas">
         <button id="btn-mayor">Mayor</button>
         <button id="btn-menor">Menor</button>
       </div>
 
+      <!-- Botones para controlar el juego -->
       <div id="acciones">
         <button id="iniciar">Iniciar Juego</button>
         <button id="terminar">Terminar Juego</button>
         <button id="recomenzar">Reiniciar Juego</button>
       </div>
 
+      <!-- Mensaje que aparece al terminar el juego -->
       <div id="mensaje" tabindex="-1">
         <h2>¡Juego Terminado!</h2>
         <button id="btn-ver-estadisticas">Ver Estadísticas</button>
       </div>
 
+      <!-- Sección para mostrar estadísticas con un gráfico -->
       <div id="estadisticas">
         <h3>Estadísticas del Juego</h3>
         <canvas id="grafico"></canvas>
       </div>
     </div>
+    
+    <!-- Librería para crear gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Archivo JavaScript con la lógica del juego -->
     <script src="script.js"></script>
   </body>
 </html>
+
