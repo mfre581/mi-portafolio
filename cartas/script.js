@@ -103,6 +103,28 @@ function mostrarCarta(carta) {
   imgCarta.alt = `${carta.value} de ${carta.suit}`;
 }
 
+function mostrarCartaConMensaje(carta, mensaje, tipo, actualizarPuntos = false) {
+  const imgCarta = document.getElementById("cardImage");
+
+  imgCarta.onload = () => {
+    mostrarMensajeJugada(mensaje, tipo);
+
+    if (actualizarPuntos) {
+      actualizarPuntuacion();
+    }
+  };
+
+  imgCarta.onerror = () => {
+    mostrarMensajeJugada(mensaje, tipo);
+
+    if (actualizarPuntos) {
+      actualizarPuntuacion();
+    }
+  };
+
+  imgCarta.src = carta.image;
+  imgCarta.alt = `${carta.value} de ${carta.suit}`;
+}
 // Convierte valor de carta a número para comparar
 function valorCarta(carta) {
   switch (carta.value) {
@@ -165,8 +187,7 @@ async function jugar(esMayor) {
   }
 
   cartaActual = nuevaCarta; // La nueva carta pasa a ser la actual
-  mostrarCarta(cartaActual);
-  actualizarPuntuacion();
+mostrarCartaConMensaje(cartaActual, mensaje, tipo, true); // true = actualiza puntuación
 
   // Si no quedan cartas, fin del juego
   if (cartasRestantes === 0) {
@@ -305,4 +326,5 @@ window.onload = () => {
   document.getElementById("terminar").style.display = "none";
   document.getElementById("recomenzar").style.display = "none";
 };
+
 
