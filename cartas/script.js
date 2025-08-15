@@ -1,3 +1,4 @@
+// VARIABLES PRINCIPALES DEL JUEGO
 let puntuacion = 0;
 let aciertos = 0;
 let fallos = 0;
@@ -20,31 +21,34 @@ function toggleInstrucciones() {
   }
 }
 
-// Inicializar el juego: obtener deck y mostrar carta inicial
+// Empieza el juego: resetea todo y saca la primera carta
 async function iniciarJuego() {
-  ocultarElementosParaInicio();
-  resetVariables();
+  ocultarElementosParaInicio(); // Prepara la interfaz
+  resetVariables();            // Pone todo a cero
 
   try {
+    // Pide a la API una baraja nueva mezclada
     const res = await fetch(
       "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
     );
     const data = await res.json();
-    deck_id = data.deck_id;
+    deck_id = data.deck_id;// Guardamos el ID para pedir cartas después
 
-    await sacarCarta();
-    actualizarPuntuacion();
-    actualizarCartasRestantes();
+    await sacarCarta();    // Saca y muestra la primera carta
+    actualizarPuntuacion();// Pone el marcador a 0
+    actualizarCartasRestantes();// Muestra cartas que quedan
   } catch (error) {
     alert("Error al iniciar el juego");
   }
 }
 
+// Muestra cuántas cartas quedan
 function actualizarCartasRestantes() {
   const contador = document.getElementById("contador-cartas");
   contador.textContent = cartasRestantes;
 }
 
+// Cambia lo que se ve en pantalla al iniciar la partida
 function ocultarElementosParaInicio() {
   document.getElementById("iniciar").style.display = "none";
   document.getElementById("jugadas").style.display = "flex";
@@ -59,6 +63,7 @@ function ocultarElementosParaInicio() {
   clearMensajeJugada();
 }
 
+// Resetea todas las variables
 function resetVariables() {
   puntuacion = 0;
   aciertos = 0;
@@ -118,6 +123,7 @@ function valorCarta(carta) {
 async function jugar(esMayor) {
   if (juegoTerminado) return;
 
+   // Pedimos una carta nueva
   const res = await fetch(
     `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
   );
@@ -137,10 +143,12 @@ async function jugar(esMayor) {
   let mensaje = "";
   clearMensajeJugada();
 
+   // Si son iguales, empate
   if (valorNuevo === valorActual) {
     mensaje = "Empate! La carta es igual.";
     mostrarMensajeJugada(mensaje, "empate");
   } else {
+     // Comprobamos si acertó
     const acerto = esMayor
       ? valorNuevo > valorActual
       : valorNuevo < valorActual;
@@ -156,10 +164,11 @@ async function jugar(esMayor) {
     }
   }
 
-  cartaActual = nuevaCarta;
+  cartaActual = nuevaCarta; // La nueva carta pasa a ser la actual
   mostrarCarta(cartaActual);
   actualizarPuntuacion();
 
+  // Si no quedan cartas, fin del juego
   if (cartasRestantes === 0) {
     juegoTerminado = true;
     mostrarMensajeFinal("Se acabaron las cartas. Juego terminado.");
@@ -167,23 +176,27 @@ async function jugar(esMayor) {
   }
 }
 
+// Muestra el mensaje de acierto, fallo o empate
 function mostrarMensajeJugada(texto, tipo) {
   const div = document.getElementById("mensaje-jugada");
   div.textContent = texto;
   div.className = `mensaje-jugada ${tipo}`;
 }
 
+// Limpia el mensaje de jugada anterior
 function clearMensajeJugada() {
   const div = document.getElementById("mensaje-jugada");
   div.textContent = "";
   div.className = "mensaje-jugada";
 }
 
+// Actualiza el marcador de puntos
 function actualizarPuntuacion() {
   const score = document.getElementById("score");
   score.textContent = puntuacion;
 }
 
+// Muestra el mensaje final de partida
 function mostrarMensajeFinal(texto) {
   const mensaje = document.getElementById("mensaje");
   mensaje.style.display = "block";
@@ -192,6 +205,7 @@ function mostrarMensajeFinal(texto) {
   mensaje.focus();
 }
 
+// Muestra botones al terminar
 function mostrarBotonesFinal() {
   document.getElementById("jugadas").style.display = "none";
   document.getElementById("terminar").style.display = "none";
@@ -202,10 +216,12 @@ function mostrarBotonesFinal() {
   btnVerEstadisticas.focus();
 }
 
+// Oculta estadísticas
 function ocultarEstadisticas() {
   document.getElementById("estadisticas").style.display = "none";
 }
 
+// Muestra estadísticas con gráfico de aciertos/fallos
 function mostrarEstadisticas() {
   const contEstadisticas = document.getElementById("estadisticas");
   contEstadisticas.style.display = "block";
@@ -219,7 +235,7 @@ function mostrarEstadisticas() {
   contEstadisticas.style.display = "block";
 
   // Scroll suave hacia el gráfico
-  contEstadisticas.scrollIntoView({ behavior: "smooth" });
+  contEstadisticas.scrollIntoView({ behavior: "smooth" });// Desplaza hasta el gráfico
 
   chart = new Chart(ctx, {
     type: "pie",
@@ -252,6 +268,7 @@ function mostrarEstadisticas() {
   });
 }
 
+// Finaliza el juego sin terminar todas las cartas
 function terminarJuego() {
   juegoTerminado = true;
   mostrarMensajeFinal("Juego terminado");
@@ -280,7 +297,7 @@ window.onload = () => {
   document.getElementById("btn-ver-estadisticas").onclick = mostrarEstadisticas;
   document.getElementById("recomenzar").onclick = reiniciarJuego;
 
-  // Inicial oculto
+    // Al principio ocultamos varias cosas
   document.getElementById("jugadas").style.display = "none";
   document.getElementById("mensaje").style.display = "none";
   document.getElementById("estadisticas").style.display = "none";
@@ -288,3 +305,4 @@ window.onload = () => {
   document.getElementById("terminar").style.display = "none";
   document.getElementById("recomenzar").style.display = "none";
 };
+
