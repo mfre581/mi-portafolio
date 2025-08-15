@@ -1,37 +1,41 @@
-let puntuacion = 0;
-let aciertos = 0;
-let fallos = 0;
-let cartasRestantes = 52;
-let deck_id = "";
-let cartaActual = null;
-let juegoTerminado = false;
-let chart = null;
+// Variables globales para controlar el estado del juego
+let puntuacion = 0;          // Puntuación del jugador
+let aciertos = 0;            // Número de aciertos
+let fallos = 0;              // Número de fallos
+let cartasRestantes = 52;    // Cuántas cartas quedan por sacar
+let deck_id = "";            // ID del mazo que nos da la API
+let cartaActual = null;      // Última carta mostrada
+let juegoTerminado = false;  // Controla si el juego sigue en marcha
+let chart = null;            // Referencia al gráfico de estadísticas
 
-// Mostrar/ocultar instrucciones
+// Función para mostrar u ocultar las instrucciones
 function toggleInstrucciones() {
   const divInst = document.getElementById("instrucciones");
   const btnInst = document.getElementById("btn-instrucciones");
+
   if (divInst.style.display === "block") {
+    // Si ya están visibles → las ocultamos
     divInst.style.display = "none";
     btnInst.textContent = "Mostrar instrucciones";
   } else {
+    // Si están ocultas → las mostramos
     divInst.style.display = "block";
     btnInst.textContent = "Ocultar instrucciones";
   }
 }
 
-// Inicializar el juego: obtener deck y mostrar carta inicial
+// Inicializa el juego desde cero
 async function iniciarJuego() {
-  ocultarElementosParaInicio();
-  resetVariables();
+  ocultarElementosParaInicio(); // Prepara la interfaz
+  resetVariables();              // Reinicia valores
 
   try {
-    const res = await fetch(
-      "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1"
-    );
+    // Crea un mazo nuevo y mezclado desde la API
+    const res = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
     const data = await res.json();
-    deck_id = data.deck_id;
+    deck_id = data.deck_id; // Guardamos el ID del mazo para futuras peticiones
 
+    // Saca la primera carta para iniciar
     await sacarCarta();
     actualizarPuntuacion();
     actualizarCartasRestantes();
@@ -40,11 +44,13 @@ async function iniciarJuego() {
   }
 }
 
+// Actualiza el contador de cartas restantes en pantalla
 function actualizarCartasRestantes() {
   const contador = document.getElementById("contador-cartas");
   contador.textContent = cartasRestantes;
 }
 
+// Muestra/oculta elementos para que empiece el juego
 function ocultarElementosParaInicio() {
   document.getElementById("iniciar").style.display = "none";
   document.getElementById("jugadas").style.display = "flex";
@@ -55,10 +61,10 @@ function ocultarElementosParaInicio() {
   document.getElementById("terminar").style.display = "inline-block";
   document.getElementById("recomenzar").style.display = "none";
   document.getElementById("btn-instrucciones").style.display = "inline-block";
-  // Quitar mensaje jugada
-  clearMensajeJugada();
+  clearMensajeJugada(); // Limpia cualquier mensaje previo
 }
 
+// Resetea todas las variables del juego
 function resetVariables() {
   puntuacion = 0;
   aciertos = 0;
@@ -68,55 +74,52 @@ function resetVariables() {
   juegoTerminado = false;
 }
 
-// Función para sacar una carta y mostrarla
+// Pide una carta nueva a la API y la muestra
 async function sacarCarta() {
   if (cartasRestantes === 0) {
+    // Si ya no quedan cartas, termina el juego
     juegoTerminado = true;
     mostrarMensajeFinal("No quedan cartas. Juego terminado.");
     return;
   }
 
-  const res = await fetch(
-    `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
-  );
+  const res = await fetch(`https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`);
   const data = await res.json();
+
   if (data.success && data.cards.length > 0) {
     cartaActual = data.cards[0];
     cartasRestantes = data.remaining;
     actualizarCartasRestantes();
-    mostrarCarta(cartaActual);
+    mostrarCarta(cartaActual); // Muestra carta inicial sin mensaje
   } else {
     juegoTerminado = true;
     mostrarMensajeFinal("Error al sacar carta. Juego terminado.");
   }
 }
 
-// Muestra la carta en pantalla
+// Muestra una carta en pantalla (sin mensajes ni puntuación)
 function mostrarCarta(carta) {
   const imgCarta = document.getElementById("cardImage");
   imgCarta.src = carta.image;
   imgCarta.alt = `${carta.value} de ${carta.suit}`;
 }
 
-function mostrarCartaConMensaje(
-  carta,
-  mensaje,
-  tipo,
-  actualizarPuntos = false
-) {
+// Muestra una carta pero esperando a que cargue la imagen
+// para mostrar mensaje y actualizar puntuación
+function mostrarCartaConMensaje(carta, mensaje, tipo, actualizarPuntos = false) {
   const imgCarta = document.getElementById("cardImage");
 
+  // Espera a que la imagen termine de cargar
   imgCarta.onload = () => {
     mostrarMensajeJugada(mensaje, tipo);
-
     if (actualizarPuntos) {
       actualizarPuntuacion();
     }
   };
 
+  // Si hay error cargando imagen → igual mostramos mensaje
   imgCarta.onerror = () => {
     mostrarMensajeJugada(mensaje, tipo);
-
     if (actualizarPuntos) {
       actualizarPuntuacion();
     }
@@ -126,29 +129,23 @@ function mostrarCartaConMensaje(
   imgCarta.alt = `${carta.value} de ${carta.suit}`;
 }
 
-// Convierte valor de carta a número para comparar
+// Convierte el valor textual de la carta a un número para comparar
 function valorCarta(carta) {
   switch (carta.value) {
-    case "ACE":
-      return 14;
-    case "KING":
-      return 13;
-    case "QUEEN":
-      return 12;
-    case "JACK":
-      return 11;
-    default:
-      return parseInt(carta.value);
+    case "ACE": return 14;
+    case "KING": return 13;
+    case "QUEEN": return 12;
+    case "JACK": return 11;
+    default: return parseInt(carta.value);
   }
 }
 
-// Maneja la jugada cuando se elige mayor o menor
+// Maneja una jugada cuando el jugador elige "mayor" o "menor"
 async function jugar(esMayor) {
   if (juegoTerminado) return;
 
-  const res = await fetch(
-    `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
-  );
+  // Pide una nueva carta
+  const res = await fetch(`https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`);
   const data = await res.json();
   if (!data.success || data.cards.length === 0) {
     juegoTerminado = true;
@@ -159,19 +156,20 @@ async function jugar(esMayor) {
   const nuevaCarta = data.cards[0];
   cartasRestantes = data.remaining;
   actualizarCartasRestantes();
+
+  // Comparar valores de la carta actual y la nueva
   const valorActual = valorCarta(cartaActual);
   const valorNuevo = valorCarta(nuevaCarta);
 
   let mensaje = "";
+  let tipo = "";
   clearMensajeJugada();
 
   if (valorNuevo === valorActual) {
     mensaje = "Empate! La carta es igual.";
     tipo = "empate";
   } else {
-    const acerto = esMayor
-      ? valorNuevo > valorActual
-      : valorNuevo < valorActual;
+    const acerto = esMayor ? valorNuevo > valorActual : valorNuevo < valorActual;
     if (acerto) {
       aciertos++;
       puntuacion++;
@@ -184,9 +182,11 @@ async function jugar(esMayor) {
     }
   }
 
+  // Guardar como carta actual y mostrar mensaje/puntuación
   cartaActual = nuevaCarta;
-  mostrarCartaConMensaje(cartaActual, mensaje, tipo, true); // true = actualiza puntuación
+  mostrarCartaConMensaje(cartaActual, mensaje, tipo, true);
 
+  // Si ya no quedan cartas → finalizar juego
   if (cartasRestantes === 0) {
     juegoTerminado = true;
     mostrarMensajeFinal("Se acabaron las cartas. Juego terminado.");
@@ -194,73 +194,69 @@ async function jugar(esMayor) {
   }
 }
 
+// Muestra el mensaje de jugada en pantalla
 function mostrarMensajeJugada(texto, tipo) {
   const div = document.getElementById("mensaje-jugada");
   div.textContent = texto;
   div.className = `mensaje-jugada ${tipo}`;
 }
 
+// Limpia el mensaje de jugada
 function clearMensajeJugada() {
   const div = document.getElementById("mensaje-jugada");
   div.textContent = "";
   div.className = "mensaje-jugada";
 }
 
+// Actualiza la puntuación en pantalla
 function actualizarPuntuacion() {
   const score = document.getElementById("score");
   score.textContent = puntuacion;
 }
 
+// Muestra mensaje final del juego
 function mostrarMensajeFinal(texto) {
   const mensaje = document.getElementById("mensaje");
   mensaje.style.display = "block";
   mensaje.querySelector("h2").textContent = texto;
-  // Mover foco al contenedor del mensaje
-  mensaje.focus();
+  mensaje.focus(); // Para accesibilidad
 }
 
+// Muestra botones finales cuando termina el juego
 function mostrarBotonesFinal() {
   document.getElementById("jugadas").style.display = "none";
   document.getElementById("terminar").style.display = "none";
   document.getElementById("recomenzar").style.display = "inline-block";
-  document.getElementById("btn-ver-estadisticas").style.display =
-    "inline-block";
-  // Enfocar el botón "Ver Estadísticas"
+  document.getElementById("btn-ver-estadisticas").style.display = "inline-block";
   btnVerEstadisticas.focus();
 }
 
+// Oculta estadísticas
 function ocultarEstadisticas() {
   document.getElementById("estadisticas").style.display = "none";
 }
 
+// Muestra estadísticas en un gráfico de pastel
 function mostrarEstadisticas() {
   const contEstadisticas = document.getElementById("estadisticas");
   contEstadisticas.style.display = "block";
 
-  if (chart) {
-    chart.destroy();
-  }
+  if (chart) chart.destroy(); // Evita gráficos duplicados
 
   const ctx = document.getElementById("grafico").getContext("2d");
-
-  contEstadisticas.style.display = "block";
-
-  // Scroll suave hacia el gráfico
   contEstadisticas.scrollIntoView({ behavior: "smooth" });
 
   chart = new Chart(ctx, {
     type: "pie",
     data: {
       labels: ["Aciertos", "Fallos"],
-      datasets: [
-        {
-          label: "Estadísticas de aciertos y fallos",
-          data: [aciertos, fallos],
-          backgroundColor: ["#4caf50", "#f44336"],
-          borderColor: "#222",
-          borderWidth: 2,
-        },
-      ],
+      datasets: [{
+        label: "Estadísticas de aciertos y fallos",
+        data: [aciertos, fallos],
+        backgroundColor: ["#4caf50", "#f44336"],
+        borderColor: "#222",
+        borderWidth: 2,
+      }],
     },
     options: {
       responsive: true,
@@ -269,9 +265,7 @@ function mostrarEstadisticas() {
           position: "bottom",
           labels: {
             color: "#f0f0f0",
-            font: {
-              size: 14,
-            },
+            font: { size: 14 },
           },
         },
       },
@@ -279,13 +273,14 @@ function mostrarEstadisticas() {
   });
 }
 
+// Termina el juego manualmente
 function terminarJuego() {
   juegoTerminado = true;
   mostrarMensajeFinal("Juego terminado");
   mostrarBotonesFinal();
 }
 
-// Al pulsar reiniciar, reseteamos variables y empezamos el juego directo
+// Reinicia todo y comienza un juego nuevo
 function reiniciarJuego() {
   ocultarEstadisticas();
   document.getElementById("mensaje").style.display = "none";
@@ -297,8 +292,7 @@ function reiniciarJuego() {
   iniciarJuego();
 }
 
-// EVENTOS al cargar la página y botones
-
+// Configura eventos cuando carga la página
 window.onload = () => {
   document.getElementById("iniciar").onclick = iniciarJuego;
   document.getElementById("btn-mayor").onclick = () => jugar(true);
@@ -307,7 +301,7 @@ window.onload = () => {
   document.getElementById("btn-ver-estadisticas").onclick = mostrarEstadisticas;
   document.getElementById("recomenzar").onclick = reiniciarJuego;
 
-  // Inicial oculto
+  // Estado inicial ocultando elementos
   document.getElementById("jugadas").style.display = "none";
   document.getElementById("mensaje").style.display = "none";
   document.getElementById("estadisticas").style.display = "none";
