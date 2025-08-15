@@ -4,9 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adivina el Pokémon</title>
+    <!-- Fuente pixel art estilo retro -->
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-
+      /* Estilo general del body */
       body {
         font-family: "Press Start 2P", cursive;
         background: linear-gradient(135deg, #ffcb05 0%, #3b4cca 100%);
@@ -18,7 +19,7 @@
         justify-content: center;
         align-items: center;
       }
-
+       /* Contenedor principal de la interfaz */
       .contenedor {
         background: rgba(255, 255, 255, 0.9);
         border: 5px solid #3b4cca;
@@ -29,14 +30,14 @@
         text-align: center;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
       }
-
+      /* Título */
       h1 {
         font-size: 1.2rem;
         margin-bottom: 20px;
         color: #3b4cca;
         text-shadow: 2px 2px #ffcb05;
       }
-
+      /* Imagen del Pokémon */
       .imagen-pokemon {
         margin: 20px auto;
         width: 200px;
@@ -46,7 +47,7 @@
         border-radius: 10px;
         background: #fff;
       }
-
+      /* Caja de texto para la respuesta */
       input[type="text"] {
         padding: 12px;
         font-size: 14px;
@@ -58,7 +59,7 @@
         text-align: center;
         font-family: inherit;
       }
-
+      /* Botones generales */
       button {
         padding: 10px 20px;
         font-size: 14px;
@@ -71,27 +72,27 @@
         background: #3b4cca;
         transition: background 0.2s, transform 0.1s;
       }
-
+      /* Efecto hover de botones */
       button:hover {
         background: #2a3694;
         transform: scale(1.05);
       }
-
+      /* Botón de pistas */
       .btn-pistas {
         background: #ffcb05;
         color: #3b4cca;
       }
-
+      /* Hover para botón de pistas */
       .btn-pistas:hover {
         background: #e6b800;
       }
-
+      /* Texto de puntaje */
       .puntaje {
         margin-top: 20px;
         font-size: 14px;
         color: #3b4cca;
       }
-
+      /* Texto de retroalimentación */
       .retroalimentacion {
         font-size: 14px;
         margin-top: 10px;
@@ -99,28 +100,38 @@
     </style>
   </head>
   <body>
+    <!-- Contenedor principal de todo el juego -->
     <div class="contenedor">
       <h1>¡Adivina el Pokémon!</h1>
+      <!-- Botón inicial -->
       <button id="botonIniciar">Iniciar Partida</button>
+      <!-- Zona del juego (oculta al inicio) -->
       <div id="contenedorJuego" style="display: none">
         <img id="imagenPokemon" class="imagen-pokemon" src="" alt="Pokemon" />
+        <!-- Input para escribir la respuesta -->
         <input
           id="respuestaUsuario"
           type="text"
           placeholder="¿Quién es este Pokémon?" />
+        <!-- Botones de verificación y pistas -->
         <div>
           <button id="botonVerificar">Verificar</button>
           <button class="btn-pistas" id="botonPistas">Obtener pistas</button>
         </div>
+        <!-- Mensajes de acierto/error -->
         <div id="retroalimentacion" class="retroalimentacion"></div>
+        <!-- Botón para pasar al siguiente Pokémon -->
         <button id="botonContinuar" style="display: none">Continuar</button>
       </div>
+      <!-- Contenedor de puntaje final -->
       <div id="contenedorPuntaje" class="puntaje" style="display: none">
         <p id="textoPuntaje"></p>
       </div>
     </div>
-
+    
+    <!-- Script del juego -->
     <script>
+      /* === REFERENCIAS A ELEMENTOS DEL DOM === */
       const botonIniciar = document.getElementById("botonIniciar");
       const contenedorJuego = document.getElementById("contenedorJuego");
       const imagenPokemon = document.getElementById("imagenPokemon");
@@ -132,31 +143,40 @@
       const botonContinuar = document.getElementById("botonContinuar");
       const botonPistas = document.getElementById("botonPistas");
 
+      /* === VARIABLES DE ESTADO DEL JUEGO === */
       let indicePokemonActual = 0;
       let pokemons = [];
       let puntaje = 0;
       let nombreActual = "";
       let pistasMostradas = 0;
 
+       /* === EVENTOS === */
+
+      // Inicia el juego al hacer clic en "Iniciar"
       botonIniciar.addEventListener("click", () => {
         botonIniciar.style.display = "none";
         iniciarJuego();
       });
 
+      /* === FUNCIONES PRINCIPALES === */
+
+      // Obtiene lista de Pokémon y empieza la partida
       async function iniciarJuego() {
         try {
           const respuesta = await fetch(
             "https://pokeapi.co/api/v2/pokemon?limit=20"
           );
           const datos = await respuesta.json();
-          pokemons = mezclarArray(datos.results);
+          pokemons = mezclarArray(datos.results);// Orden aleatorio
           mostrarPokemon();
         } catch (error) {
           console.error("Error al obtener los Pokémon:", error);
         }
       }
 
+      // Muestra el siguiente Pokémon
       async function mostrarPokemon() {
+        // Si ya no quedan Pokémon → fin del juego
         if (indicePokemonActual >= pokemons.length) {
           finalizarJuego();
           return;
@@ -164,10 +184,12 @@
 
         const pokemon = pokemons[indicePokemonActual];
         try {
+          // Obtiene detalles del Pokémon
           const respuesta = await fetch(pokemon.url);
           const datosPokemon = await respuesta.json();
           const imagenUrl = datosPokemon.sprites.front_default;
 
+          // Configura la imagen y estado inicial
           imagenPokemon.src = imagenUrl;
           respuestaUsuario.value = "";
           retroalimentacion.textContent = "";
@@ -176,6 +198,7 @@
           nombreActual = pokemon.name.toLowerCase();
           pistasMostradas = 0;
 
+          // Mostrar/ocultar botones
           botonVerificar.style.display = "inline-block";
           botonContinuar.style.display = "none";
         } catch (error) {
@@ -183,6 +206,7 @@
         }
       }
 
+       // Comprueba si la respuesta es correcta
       botonVerificar.addEventListener("click", () => {
         const respuesta = respuestaUsuario.value.trim().toLowerCase();
 
@@ -198,11 +222,13 @@
         }
       });
 
+      // Pasa al siguiente Pokémon
       botonContinuar.addEventListener("click", () => {
         indicePokemonActual++;
         mostrarPokemon();
       });
 
+      // Muestra pistas (letras del nombre)
       botonPistas.addEventListener("click", () => {
         if (pistasMostradas < nombreActual.length) {
           pistasMostradas++;
@@ -217,12 +243,14 @@
         }
       });
 
+      // Muestra el puntaje fina
       function finalizarJuego() {
         contenedorJuego.style.display = "none";
         textoPuntaje.textContent = `Juego terminado. Tu puntaje final es: ${puntaje}/${pokemons.length}`;
         contenedorPuntaje.style.display = "block";
       }
 
+      // Mezcla aleatoriamente los Pokémon (algoritmo Fisher-Yates)
       function mezclarArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -233,3 +261,4 @@
     </script>
   </body>
 </html>
+
